@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { StatusBadge } from "@/components/StatusBadge";
@@ -40,6 +40,10 @@ type Prospect = {
   fecha_proxima_accion: string | null;
   fecha_ultima_reunion: string | null;
   notas: string | null;
+  sensibilidad: number | null;
+  objeciones: any | null;
+  resumen_ejecutivo: string | null;
+  citas_clave: any | null;
   created_at: string;
 };
 
@@ -75,7 +79,7 @@ export default function Prospectos() {
   });
 
   // Listen for new prospect modal event
-  useState(() => {
+  useEffect(() => {
     const handleOpenModal = () => {
       setSelectedProspect(null);
       setIsModalOpen(true);
@@ -83,7 +87,7 @@ export default function Prospectos() {
 
     window.addEventListener("open-prospect-modal", handleOpenModal);
     return () => window.removeEventListener("open-prospect-modal", handleOpenModal);
-  });
+  }, []);
 
   const handleRowClick = (prospect: Prospect) => {
     setSelectedProspect(prospect);
