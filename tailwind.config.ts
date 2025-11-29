@@ -57,6 +57,21 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        status: {
+          nuevo: "hsl(var(--status-nuevo))",
+          contactado: "hsl(var(--status-contactado))",
+          reunionAgendada: "hsl(var(--status-reunion-agendada))",
+          reunionHecha: "hsl(var(--status-reunion-hecha))",
+          propuestaEnviada: "hsl(var(--status-propuesta-enviada))",
+          negociando: "hsl(var(--status-negociando))",
+          pagado: "hsl(var(--status-pagado))",
+          perdido: "hsl(var(--status-perdido))",
+        },
+        temp: {
+          hot: "hsl(var(--temp-hot))",
+          warm: "hsl(var(--temp-warm))",
+          cold: "hsl(var(--temp-cold))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
