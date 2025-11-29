@@ -13,11 +13,14 @@ export function OnboardingTour({ run, onComplete }: OnboardingTourProps) {
     {
       target: "body",
       content: (
-        <div className="space-y-2">
+        <div className="space-y-3">
           <h3 className="text-lg font-bold">¡Bienvenido a Lawgic Sales Pipeline! 🎉</h3>
           <p>
             Esta plataforma te ayudará a gestionar tu proceso de ventas de manera eficiente.
             Te mostraremos las funcionalidades principales en un recorrido rápido.
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Puedes cerrar este recorrido en cualquier momento haciendo clic en "Saltar" o presionando ESC.
           </p>
         </div>
       ),
@@ -36,6 +39,7 @@ export function OnboardingTour({ run, onComplete }: OnboardingTourProps) {
         </div>
       ),
       placement: "right",
+      disableBeacon: true,
     },
     {
       target: '[data-tour="prospectos"]',
@@ -49,6 +53,7 @@ export function OnboardingTour({ run, onComplete }: OnboardingTourProps) {
         </div>
       ),
       placement: "right",
+      disableBeacon: true,
     },
     {
       target: '[data-tour="pipeline"]',
@@ -62,6 +67,7 @@ export function OnboardingTour({ run, onComplete }: OnboardingTourProps) {
         </div>
       ),
       placement: "right",
+      disableBeacon: true,
     },
     {
       target: '[data-tour="nuevo-prospecto"]',
@@ -75,6 +81,7 @@ export function OnboardingTour({ run, onComplete }: OnboardingTourProps) {
         </div>
       ),
       placement: "bottom",
+      disableBeacon: true,
     },
     {
       target: '[data-tour="buscar"]',
@@ -87,6 +94,7 @@ export function OnboardingTour({ run, onComplete }: OnboardingTourProps) {
         </div>
       ),
       placement: "bottom",
+      disableBeacon: true,
     },
     {
       target: "body",
@@ -103,23 +111,34 @@ export function OnboardingTour({ run, onComplete }: OnboardingTourProps) {
               <li>Filtra por estado y temperatura para organizar mejor</li>
             </ul>
           </div>
-          <p className="text-sm">
-            Puedes volver a ver este recorrido cuando quieras desde el botón de ayuda en el menú.
+          <p className="text-sm font-medium">
+            Puedes volver a ver este recorrido cuando quieras desde el botón "Recorrido guiado" en el menú lateral.
           </p>
         </div>
       ),
       placement: "center",
+      disableBeacon: true,
     },
   ];
 
   const handleJoyrideCallback = (data: CallBackProps) => {
-    const { status, index } = data;
+    const { status, type, index, action } = data;
     
-    if (status === STATUS.FINISHED || status === STATUS.SKIPPED) {
+    // Close tour on any completion status or ESC key
+    if (
+      status === STATUS.FINISHED || 
+      status === STATUS.SKIPPED ||
+      action === "close" ||
+      action === "skip"
+    ) {
       onComplete();
       setStepIndex(0);
-    } else {
-      setStepIndex(index);
+      return;
+    }
+    
+    // Update step index for navigation
+    if (type === "step:after") {
+      setStepIndex(index + (action === "prev" ? -1 : 1));
     }
   };
 
@@ -138,21 +157,25 @@ export function OnboardingTour({ run, onComplete }: OnboardingTourProps) {
       showProgress
       showSkipButton
       scrollToFirstStep
-      disableOverlayClose
+      disableOverlayClose={false}
+      disableCloseOnEsc={false}
+      spotlightClicks={false}
+      hideCloseButton={false}
       locale={{
         back: "Atrás",
         close: "Cerrar",
         last: "Finalizar",
         next: "Siguiente",
-        skip: "Saltar",
+        skip: "Saltar tour",
       }}
       styles={{
         options: {
-          primaryColor: "hsl(var(--primary))",
-          backgroundColor: "hsl(var(--background))",
-          textColor: "hsl(var(--foreground))",
-          arrowColor: "hsl(var(--background))",
+          primaryColor: "hsl(217 91% 60%)",
+          backgroundColor: "hsl(240 10% 3.9%)",
+          textColor: "hsl(0 0% 98%)",
+          arrowColor: "hsl(240 10% 3.9%)",
           zIndex: 10000,
+          overlayColor: "rgba(0, 0, 0, 0.6)",
         },
         tooltip: {
           borderRadius: 8,
@@ -162,16 +185,27 @@ export function OnboardingTour({ run, onComplete }: OnboardingTourProps) {
           padding: "10px 0",
         },
         buttonNext: {
-          backgroundColor: "hsl(var(--primary))",
+          backgroundColor: "hsl(217 91% 60%)",
           borderRadius: 6,
           padding: "8px 16px",
+          fontSize: "14px",
         },
         buttonBack: {
-          color: "hsl(var(--muted-foreground))",
+          color: "hsl(0 0% 63.9%)",
           marginRight: 10,
+          fontSize: "14px",
         },
         buttonSkip: {
-          color: "hsl(var(--muted-foreground))",
+          color: "hsl(0 0% 63.9%)",
+          fontSize: "14px",
+        },
+        buttonClose: {
+          color: "hsl(0 0% 63.9%)",
+          fontSize: "20px",
+          padding: "8px",
+        },
+        overlay: {
+          cursor: "pointer",
         },
       }}
       callback={handleJoyrideCallback}
