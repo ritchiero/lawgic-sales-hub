@@ -51,7 +51,7 @@ export function TopBar() {
       </Breadcrumb>
 
       <div className="ml-auto flex items-center gap-2">
-        <div className="relative w-64">
+        <div className="relative w-64" data-tour="buscar">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             type="search"
@@ -60,7 +60,7 @@ export function TopBar() {
           />
         </div>
 
-        <Button onClick={handleNewProspect} className="gap-2">
+        <Button onClick={handleNewProspect} className="gap-2" data-tour="nuevo-prospecto">
           <Plus className="h-4 w-4" />
           Nuevo prospecto
         </Button>

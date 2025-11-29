@@ -1,5 +1,6 @@
-import { LayoutDashboard, Users, TrendingUp, Settings } from "lucide-react";
+import { LayoutDashboard, Users, TrendingUp, Settings, HelpCircle } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
+import { Button } from "@/components/ui/button";
 import {
   Sidebar,
   SidebarContent,
@@ -21,7 +22,11 @@ const menuItems = [
   { title: "Configuración", url: "/configuracion", icon: Settings },
 ];
 
-export function AppSidebar() {
+interface AppSidebarProps {
+  onStartTour: () => void;
+}
+
+export function AppSidebar({ onStartTour }: AppSidebarProps) {
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
 
@@ -46,7 +51,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem key={item.title} data-tour={item.title.toLowerCase()}>
                   <SidebarMenuButton asChild>
                     <NavLink
                       to={item.url}
@@ -60,6 +65,22 @@ export function AppSidebar() {
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <div className="px-2">
+              <Button
+                onClick={onStartTour}
+                variant="outline"
+                className="w-full justify-start gap-3"
+                size={isCollapsed ? "icon" : "default"}
+              >
+                <HelpCircle className="h-4 w-4" />
+                {!isCollapsed && <span>Recorrido guiado</span>}
+              </Button>
+            </div>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
